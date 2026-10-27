@@ -60,6 +60,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-excludes.sh
 . "$LIB_DIR/webroot-excludes.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -138,16 +140,15 @@ run_heavy() {
   # TRACY_HEAVY_LOCK_HELD: the caller (webroot-backup.sh restore-everything) already holds it, and
   # a second open of the same file would wait on its own parent.
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
   # A queue must LOOK like a queue (12/10/2026, fleet01). The step a provision job shows is the last
   # `==> ` line its script printed (`stepFromLine`, apps/tracy-host/src/provision.js), so eight demo
   # installs pressed together all read "building the webroot baseline" for 10+ minutes while seven
   # only waited here. Try once without waiting; when the lock is taken, say so, wait as before, then
   # put the step back to the work this caller is about to do (HEAVY_RESUME_STAGE). On stderr, never
   # stdout: every op answers its caller with one JSON line there.
-  if ! flock -n 9; then
-    echo "==> waiting for another site's webroot baseline (one at a time per machine)" >&2
-    if ! flock -w 1800 9; then
+  if ! heavy_try "$HEAVY_LOCK"; then
+    echo "==> waiting for another site's webroot baseline (the machine's heavy jobs are full)" >&2
+    if ! heavy_wait "$HEAVY_LOCK" 1800; then
       echo "another heavy webroot job is running; try again shortly" >&2
       exit 1
     fi

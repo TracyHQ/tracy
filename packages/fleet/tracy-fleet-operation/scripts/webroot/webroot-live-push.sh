@@ -35,6 +35,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-repo-git.sh
 . "$LIB_DIR/webroot-repo-git.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -98,10 +100,9 @@ print("" if v is None else (json.dumps(v) if isinstance(v, (dict, list, bool)) e
 HEAVY_LOCK="${TRACY_HEAVY_LOCK:-/var/lock/tracy-webroot-heavy.lock}"
 run_heavy() {
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
-  if ! flock -n 9; then
-    step "waiting for another site's heavy webroot job (one at a time per machine)"
-    flock -w 1800 9 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
+  if ! heavy_try "$HEAVY_LOCK"; then
+    step "waiting for another site's heavy webroot job (the machine's heavy jobs are full)"
+    heavy_wait "$HEAVY_LOCK" 1800 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
   fi
   export TRACY_HEAVY_LOCK_HELD=1
   "$@"

@@ -34,10 +34,11 @@ function stack() {
 }
 
 /** Start `--op ensure`; resolve with its exit code and both streams once it ends. */
-function ensure(s) {
+function ensure(s, extra = {}) {
   const child = spawn('bash', [GIT, '--label', LABEL, '--op', 'ensure'], {
     env: {
       ...process.env,
+      ...extra,
       PATH: pathWithFlock(),
       TRACY_SRV: s.srv,
       TRACY_SITES_ROOT: s.srv,
@@ -84,14 +85,18 @@ const until = async (check, ms = 10000) => {
 
 test('a baseline queued behind another heavy job says it is waiting, then says it is building', async () => {
   const s = stack()
+  // Both of the machine's slots taken (lib/heavy-slots.sh: the lock, then `<lock>.1`).
   const other = holdLock(s.lock)
+  const second = holdLock(`${s.lock}.1`)
   try {
     await other.held
+    await second.held
     const job = ensure(s)
     assert.ok(await until(() => WAITING.test(job.out.stderr)), `no waiting line; stderr:\n${job.out.stderr}`)
     // Still queued: nothing claims to be building yet.
     assert.doesNotMatch(job.out.stderr, BUILDING)
     other.release()
+    second.release()
     const result = await job.done
     assert.equal(result.code, 0, result.stderr)
     // The step flips back to the real work once the lock is ours, so the screen shows the build.
@@ -99,6 +104,36 @@ test('a baseline queued behind another heavy job says it is waiting, then says i
     assert.ok(result.stderr.search(WAITING) < result.stderr.search(BUILDING), 'waiting comes first')
     // stdout stays the JSON answer the callers parse.
     assert.equal(JSON.parse(result.stdout.trim().split('\n').at(-1)).ok, true)
+  } finally {
+    other.release()
+    second.release()
+    s.dispose()
+  }
+})
+
+test('one heavy job running leaves the machine a second slot: a baseline starts at once beside it; one slot makes it wait', async () => {
+  const s = stack()
+  const other = holdLock(s.lock)
+  try {
+    await other.held
+    const beside = await ensure(s).done
+    assert.equal(beside.code, 0, beside.stderr)
+    assert.doesNotMatch(beside.stderr, WAITING, 'the second slot was free')
+    // TRACY_HEAVY_SLOTS=1, the old one-at-a-time: queued until the other job ends.
+    const s1 = stack()
+    try {
+      const other1 = holdLock(s1.lock)
+      await other1.held
+      const job = ensure(s1, { TRACY_HEAVY_SLOTS: '1' })
+      assert.ok(
+        await until(() => WAITING.test(job.out.stderr)),
+        `no waiting line; stderr:\n${job.out.stderr}`
+      )
+      other1.release()
+      assert.equal((await job.done).code, 0)
+    } finally {
+      s1.dispose()
+    }
   } finally {
     other.release()
     s.dispose()
