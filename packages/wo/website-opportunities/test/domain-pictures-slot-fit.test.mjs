@@ -85,3 +85,67 @@ test('fitCrop is the recipe the planner itself writes: the same crop as fitOf fo
   // Without a label the subject is kept by attention.
   assert.equal(fitCrop({ width: 1800, height: 1350 }, demo).strategy, 'attention')
 })
+
+// Wave 2 (ADR 0039): a slot whose content map declares its Slot fit is judged by that, not by its name or file type.
+const fitted = (label, kind, extra = {}) =>
+  slot(label, {
+    ...(kind === 'photo' || kind === 'video-poster' ? {} : { customize: 'keep' }),
+    fit: {
+      measured: false,
+      kind,
+      replace: kind === 'logo' ? 'logo' : ['photo', 'video-poster'].includes(kind) ? 'photo' : 'keep',
+      transparent: extra.transparent ?? null,
+      source: null
+    }
+  })
+
+test('a declared photo is replaceable even as a PNG nobody measured, and a declared icon is kept whatever its name', () => {
+  assert.equal(
+    protectedPicture(fitted('Classes / feature_img', 'photo'), 'images/demo/classes/one.png'),
+    null
+  )
+  assert.equal(
+    protectedPicture(fitted('Classes / feature_img', 'icon'), 'images/demo/classes/one.jpg')?.kind,
+    'icon'
+  )
+  const icon = fitted('Classes / feature_img', 'icon')
+  delete icon.customize
+  // A fit whose keep flag disagrees with its kind is malformed: the guesses decide, as before.
+  assert.equal(protectedPicture(icon, 'images/demo/classes/one.jpg'), null)
+})
+
+test('a declared cut-out is kept as a cut-out, and a declared logo is the business logo to take', () => {
+  const cut = protectedPicture(
+    fitted('Hero / image-main', 'cutout', { transparent: true }),
+    'images/demo/hero/a.png'
+  )
+  assert.equal(cut?.kind, 'cutout')
+  assert.match(cut.reason, /transparent/)
+  const logo = fitted('Header / brand-img', 'logo')
+  logo.customize = 'keep'
+  assert.equal(protectedPicture(logo, 'images/demo/header/a.jpg')?.kind, 'logo')
+})
+
+test('the planner takes a declared photo the guesses would have kept, sized by its declared source', () => {
+  const map = slotMap({
+    slots: [
+      {
+        key: 'a-1.0',
+        entity: 'article-1',
+        type: 'image',
+        label: 'Classes / feature_img',
+        sample: 'images/demo/classes/one.png',
+        fit: {
+          measured: false,
+          kind: 'photo',
+          replace: 'photo',
+          transparent: false,
+          source: { width: 1400, height: 600, format: 'png' }
+        }
+      }
+    ],
+    pages: [{ entity: 'article-1', route: 'classes', assignedModules: [] }]
+  })
+  assert.equal(map.never.length, 0)
+  assert.deepEqual(map.groups[0].demo, { width: 1400, height: 600 })
+})

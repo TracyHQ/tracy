@@ -170,3 +170,28 @@ test('the agent demo plan is made from content-map roles, and falls back to noth
   })
   assert.match(none.slotFill.state, /missing/)
 })
+
+test('the same reader gives each slot its Slot fit, and says missing for a content map without one', (t) => {
+  const map = JSON.parse(readFileSync(FIXTURE, 'utf8'))
+  assert.equal(readSlotRoles(contractWith(t, map)).fit.state, 'missing')
+  map.slotFitVersion = 'slot-fit/1'
+  map.fitGroups = { 'module-503.item': { items: 2, uniform: true, whenFewer: 'neutral' } }
+  for (const s of map.slots)
+    if (s.type === 'text' || s.type === 'image')
+      s.fit =
+        s.type === 'image'
+          ? {
+              measured: false,
+              kind: 'photo',
+              replace: 'photo',
+              transparent: false,
+              source: { width: 800, height: 600, format: 'jpg' }
+            }
+          : { measured: false }
+  const { fit } = readSlotRoles(contractWith(t, map))
+  assert.equal(fit.state, 'ready')
+  assert.equal(fit.version, 'slot-fit/1')
+  assert.equal(fit.slots['module-502.0'].kind, 'photo')
+  assert.deepEqual(fit.groups, map.fitGroups)
+  assert.deepEqual(fit.missing, { image: 0, text: 0 })
+})

@@ -7,6 +7,8 @@
 // evidence, and a cut-out — a transparent PNG replaced by a rectangular photo shows a box in the middle of the design. A
 // PNG whose transparency was not measured counts as a cut-out until it is.
 
+import { PICTURE_KINDS, slotFitOf } from './content-map-fit.mjs'
+
 // Each rule names the kind of picture it protects (`protectedPicture`): every build path keeps these as the template drew them.
 const NEVER = [
   ['map', /\bmaps?\b|google\.[a-z.]+\/maps/i, 'a map: a picture of a place would invent one'],
@@ -141,6 +143,11 @@ function roleOf(slot, file) {
  * @returns {{kind: string, reason: string} | null}
  */
 export function protectedPicture(slot, file, demo = null) {
+  // A content map with Slot fit (ADR 0039) says what the picture is, measured at capture: no name or file guess below.
+  // A well-formed fit keeps `customize: "keep"` in step with its kind, so a photo it declares is never a kept slot.
+  const fit = slot ? slotFitOf({ type: 'image', ...slot }) : null
+  if (fit?.kind)
+    return fit.replace === 'photo' ? null : { kind: fit.kind, reason: PICTURE_KINDS[fit.kind].what }
   if (slot?.customize === 'keep')
     return { kind: 'keep', reason: 'a slot the template only declares (customize "keep"): its picture stays' }
   const { section, name } = partsOf(slot ?? {})
@@ -162,6 +169,16 @@ function neverOf(slot, file, demo) {
   if (slot.requiresEvidence) return 'a fact that needs evidence (a real person or record)'
   if (/^https?:/i.test(file)) return 'not a file of the site'
   return protectedPicture(slot, file, demo)?.reason ?? null
+}
+
+/** The demo file as the content map's Slot fit measured it (ADR 0039), or null. */
+function declaredSource(slots) {
+  for (const slot of slots) {
+    const fit = slotFitOf(slot)
+    if (fit?.source?.width && fit?.source?.height)
+      return { width: fit.source.width, height: fit.source.height, alpha: fit.transparent ?? undefined }
+  }
+  return null
 }
 
 /** The pages (routes) that show each entity, in page order, and where on each page. */
@@ -222,7 +239,7 @@ export function slotMap(
   const never = []
   const skipped = []
   for (const entry of files.values()) {
-    const measured = demo.get(entry.file) ?? null
+    const measured = demo.get(entry.file) ?? declaredSource(entry.slots)
     // The file the site serves beats what the contract declares: a sealed site checks the shape against the file.
     const size =
       measured?.width && measured?.height

@@ -1,5 +1,5 @@
 // Open one page at one viewport, read-only, wake lazy content, extract items, take a full-page shot.
-import { extractPage } from './browser-extract.js'
+import { extractPage, measurePictures } from './browser-extract.js'
 
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900, isMobile: false, deviceScaleFactor: 1 },
@@ -60,6 +60,14 @@ export async function renderPage(ctx, url, { screenshot = true } = {}) {
     await wakeLazyContent(page)
     await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {})
     const data = await page.evaluate(extractPage)
+    const rasters = [
+      ...new Set(
+        data.items
+          .filter((i) => i.kind === 'image' && /\.(png|jpe?g|webp|gif|avif)(?:[?#]|$)/i.test(String(i.value)))
+          .map((i) => i.value)
+      )
+    ]
+    data.pictures = await page.evaluate(measurePictures, rasters).catch(() => ({}))
     // The HTML as the server sent it, for page hygiene (PHP error text hides in it); the DOM as a fallback.
     const html = (await resp?.text().catch(() => null)) ?? (await page.content().catch(() => null))
     let shot

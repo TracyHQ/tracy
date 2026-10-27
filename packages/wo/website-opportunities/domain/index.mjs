@@ -67,6 +67,18 @@ export {
   slotRolesOfContentMap
 } from './content-map-roles.mjs'
 export {
+  ICON_PX,
+  PICTURE_KINDS,
+  SLOT_FIT_TOLERANCE,
+  SLOT_FIT_VERSION,
+  checkContentMapFit,
+  contentMapDeclaresFit,
+  pictureKindOf,
+  pictureReplaceOf,
+  slotFitOf,
+  slotFitOfContentMap
+} from './content-map-fit.mjs'
+export {
   neutralItemName,
   SECTION_ACTIONS,
   sectionAction,

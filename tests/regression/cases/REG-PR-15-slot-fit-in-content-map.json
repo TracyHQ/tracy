@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-15-slot-fit-in-content-map",
+  "kind": "feat",
+  "title": "Capture measures Slot fit on every text and image slot; a picture's keep flag follows its measured kind",
+  "pr": 15,
+  "area": "content-contract/slot-fit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test packages/cms/tracy-quickstart-tools/test/slot-fit.test.mjs packages/wo/website-opportunities/test/domain-content-map-fit.test.mjs scripts/test/slot-roles-contract-check.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A class photo marked customize keep loses the flag and gets kind photo, its boxes per viewport and aspect.",
+    "An icon, an avatar strip and a transparent hero cut-out are kept; the cut-out says transparent true.",
+    "The contract check refuses a kept photo and a slot without fit in a map that declares Slot fit."
+  ],
+  "selectors": {
+    "function": "packages/cms/tracy-quickstart-tools/content-coverage/lib/slot-fit.mjs measureSlotFit; packages/wo/website-opportunities/domain/pictures/content-map-fit.mjs checkContentMapFit, pictureKindOf",
+    "test": "packages/cms/tracy-quickstart-tools/test/slot-fit.test.mjs; packages/wo/website-opportunities/test/domain-content-map-fit.test.mjs; scripts/test/slot-roles-contract-check.test.mjs"
+  },
+  "evidence": "A Joomla boxing template's contract kept 198 of 257 picture slots, so a site built from a brief kept mostly demo photos, and no slot said its box or that the hero needs a transparent picture.",
+  "fence": "measureSlotFit turns the coverage audit's measured boxes and file transparency into fit, and sets customize keep from the kind; checkContentMapFit refuses a flag that disagrees with the kind.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/slot-fit.test.mjs",
+      "packages/wo/website-opportunities/test/domain-content-map-fit.test.mjs",
+      "scripts/test/slot-roles-contract-check.test.mjs"
+    ],
+    "tests": [
+      "a class photo the old rule kept becomes replaceable, with the box of each viewport and its shape",
+      "icons, faces and cut-outs are kept, and the hero cut-out says it needs a transparent picture",
+      "the keep flag of a picture follows its kind: a kept photo and a replaceable icon are both errors",
+      "a broken Slot fit fails the contract check: a kept photo, a missing fit"
+    ]
+  }
+}

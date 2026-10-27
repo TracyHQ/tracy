@@ -11,10 +11,15 @@
 //     [--db-dump <database.sql[.gz]>] [--webroot <unpacked webroot>] [--site-config <json>] \
 //     [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] \
 //     [--report-only | --reclassify]   (rebuild from an existing findings.json, no browser run)
+//     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
+//               picture's keep flag by its kind; with --write the content map gets them, BEFORE content-coverage.json
+//               is built, so the coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
+import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { COVERAGE_POLICY, judgeCoverage } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { guessEntity, runAudit, summarize } from './lib/audit.mjs'
@@ -28,10 +33,11 @@ import { buildReport } from './lib/report-html.mjs'
 import { groupByCause } from './lib/root-cause.mjs'
 import { createShrinker } from './lib/shrink.mjs'
 import { readSiteConfig } from './lib/site-config.mjs'
+import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
 
 const USAGE =
-  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify]'
+  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit]'
 
 function parseArgs(argv) {
   const o = {}
@@ -88,6 +94,29 @@ function reclassify(result, contract, siteUrl, o) {
   return result
 }
 
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+
+/** Slot fit from this run's findings into the content map (or beside the evidence), formatted as capture formats it. */
+function writeSlotFit({ result, contractDir, outDir, write }) {
+  const mapFile = join(contractDir, 'content-map.json')
+  const { map, summary } = measureSlotFit({
+    map: JSON.parse(readFileSync(mapFile, 'utf8')),
+    findings: result
+  })
+  const file = write ? mapFile : join(outDir, 'content-map.fit.json')
+  writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)
+  try {
+    execFileSync('pnpm', ['exec', 'biome', 'format', '--write', '--files-max-size=4000000', file], {
+      cwd: REPO_ROOT,
+      stdio: 'ignore'
+    })
+  } catch (error) {
+    // The copy beside the evidence is for reading; only the contract's own map must be formatted.
+    if (write) throw error
+  }
+  return { ...summary, file }
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   if (!o.site || !o.contract || !o.out) {
@@ -98,7 +127,7 @@ async function main() {
   const outDir = resolve(o.out)
   const contractDir = resolve(o.contract)
   mkdirSync(outDir, { recursive: true })
-  const contract = loadContract(contractDir, siteUrl)
+  let contract = loadContract(contractDir, siteUrl)
   const viewports = String(o.viewports ?? 'desktop,phone').split(',')
   const findings = join(outDir, 'findings.json')
   const chromium = o['report-only'] && o['no-report'] ? null : await chromiumOf()
@@ -146,6 +175,9 @@ async function main() {
     }
   }
 
+  const slotFit = o.fit ? writeSlotFit({ result, contractDir, outDir, write: Boolean(o.write) }) : null
+  if (slotFit && o.write) contract = loadContract(contractDir, siteUrl)
+
   const target = join(contractDir, COVERAGE_FILE)
   const previous = existsSync(target) ? JSON.parse(readFileSync(target, 'utf8')) : null
   const doc = buildCoverageFile({ result, contract, previous })
@@ -168,6 +200,7 @@ async function main() {
         hygieneAccepted: verdict.hygieneAccepted,
         incomplete: verdict.incomplete,
         written: o.write ? target : null,
+        slotFit,
         findings,
         report: o['no-report'] ? null : join(outDir, 'report.html')
       },

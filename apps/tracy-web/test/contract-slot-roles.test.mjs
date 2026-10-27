@@ -97,5 +97,11 @@ test('the hand-written map comes with any source, for the callers that pin from 
 })
 
 test('no contract at all reads as missing', () => {
-  assert.deepEqual(readSlotRoles(null), { source: 'none', state: 'missing', gaps: [], handMap: null })
+  assert.deepEqual(readSlotRoles(null), {
+    source: 'none',
+    state: 'missing',
+    gaps: [],
+    handMap: null,
+    fit: { state: 'missing', version: null, slots: {}, groups: {}, missing: { image: 0, text: 0 } }
+  })
 })

@@ -16,6 +16,10 @@
  * translated from the template's words (LANG-2, `brief-engines/keep-words.js`, `translatedKeep`): "keep"
  * keeps the meaning, never the template's language.
  *
+ * Pictures are the exception to "every slot those rules add": from ADR 0039 the content coverage audit's Slot fit
+ * measures each picture slot's kind and sets this flag from it, so a contract with Slot fit keeps icons, faces,
+ * signatures, cut-outs, decoration and maps, and lets Customize replace its photographs.
+ *
  * The seeder's planner (`packages/cms/tracy-seeder/src/plan-joomla-contract.mjs`) holds the same rule on its own
  * input, because it cannot import from this app.
  */
