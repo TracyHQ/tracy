@@ -23,7 +23,12 @@ import {
 } from 'website-opportunities/domain/editorial-guide.mjs'
 import { sourceText } from 'website-opportunities/domain/source-span.mjs'
 import { heldNamesIn, heldPeopleOf } from 'website-opportunities/domain/held-reviews.mjs'
-import { brandWithoutName, nameHeldOf, siteNameOf } from 'website-opportunities/domain/held-name.mjs'
+import {
+  brandWithoutName,
+  nameHeldOf,
+  nameHeldReasonsOf,
+  siteNameOf
+} from 'website-opportunities/domain/held-name.mjs'
 import { canonicalJson } from '../lib/questions-schema.mjs'
 import { demoTransparency } from '../lib/picture-cut.js'
 import { buildPlaced } from './build-store.js'
@@ -260,7 +265,10 @@ export function checkedResearch(revision) {
   const heldPeople = heldPeopleOf(revision.brief?.missing)
   // 🔒 A business name the brief holds off the site (`held-name.mjs`): the research brand names nobody, neither the held
   // name nor the handle a social page was read under, so the agent has no name to fall back on. Its logo stays.
+  // `nameHeld` has the brief's own shape (`brand.nameHeld`): {missing: 'name', reasons}, never a bare flag.
   const nameHeld = nameHeldOf(revision.brief)
+    ? { missing: 'name', reasons: nameHeldReasonsOf(revision.brief) }
+    : null
   return {
     ...research,
     ...(heldPeople.length ? { heldPeople } : {}),

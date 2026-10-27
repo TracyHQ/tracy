@@ -155,7 +155,9 @@ export interface Api {
   ): Promise<Answer<{ results?: unknown[]; done?: number; skipped?: number; failed?: number }>>
   detail(opportunityId: string): Promise<Answer<Record<string, unknown>>>
   /** The place's research as the template-independent place profile (ADR 0037). */
-  placeProfile(opportunityId: string): Promise<Answer<{ profile?: unknown; decisions?: unknown }>>
+  placeProfile(
+    opportunityId: string
+  ): Promise<Answer<{ profile?: unknown; decisions?: unknown; siteName?: unknown }>>
   /** One fact on or off for the site, or `null` to let the rule decide again (`PUT …/:id/facts`, #1791). */
   setFact(
     opportunityId: string,

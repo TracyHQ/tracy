@@ -6,12 +6,13 @@
  */
 import { createHash } from 'node:crypto'
 import { canonicalJson } from 'website-opportunities/src/canonical-json.js'
+import { nameHeldOf, siteNameOf } from 'website-opportunities/domain/held-name.mjs'
 
 /**
  * @param {any} pool
  * @param {{accountId: string, opportunityId: string}} args
  * @returns {Promise<{revisionId: string, profile: any, origin: string, at: string | null, seenAt: Record<string, string>,
- *   factIds: string[] | null} | null>} null when no revision froze a profile that still matches its hash
+ *   factIds: string[] | null, siteName?: string} | null>} null when no revision froze a profile that still matches its hash
  */
 export async function frozenPlaceProfileOf(pool, { accountId, opportunityId }) {
   const row = (
@@ -33,6 +34,8 @@ export async function frozenPlaceProfileOf(pool, { accountId, opportunityId }) {
     at: frozen.assessment.evaluatedAt ?? null,
     seenAt: frozen.assessment.seenAt ?? {},
     // The facts the brief states (schema 2); an older brief states none of its own, so the card judges them all.
-    factIds: Array.isArray(row.brief?.facts) ? row.brief.facts.map((f) => f.id) : null
+    factIds: Array.isArray(row.brief?.facts) ? row.brief.facts.map((f) => f.id) : null,
+    // While that brief holds the business name, the neutral identity the site goes by instead (`siteNameOf`).
+    ...(nameHeldOf(row.brief) && siteNameOf(row.brief) ? { siteName: siteNameOf(row.brief) } : {})
   }
 }

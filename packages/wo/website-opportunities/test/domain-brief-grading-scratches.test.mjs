@@ -503,11 +503,9 @@ test('G. while the business name is held, the site is named by the neutral ident
   const shown = JSON.stringify({ ...business, socials: undefined })
   for (const held of [SERVICE_NAME, 'Harbour Sport Club', 'harbour.sportclub'])
     assert.ok(!shown.includes(held), held)
-  assert.equal(
-    brief.business.name,
-    SERVICE_NAME,
-    'the brief itself still records the held name for the owner'
-  )
+  // The brief's business is named the same way; the held name stays in its fact, off the site, for the owner.
+  assert.equal(brief.business.name, 'Coaching team in Dubai')
+  assert.equal(brief.facts.find((f) => f.field === 'name').value, SERVICE_NAME)
   // The legacy pinned copy's hero title is the same neutral identity.
   assert.equal(pinnedCopy(brief)['hero.title']?.value ?? null, 'Coaching team in Dubai')
   // The agent demo's prompt names the site the same way; only its withheld lines name the held name, as held.
@@ -516,7 +514,11 @@ test('G. while the business name is held, the site is named by the neutral ident
   for (const l of prompt.split('\n').filter((l) => l.includes(SERVICE_NAME)))
     assert.match(l, /withheld|held|not on the site|written nowhere|Do not|never/i, l)
   // Counter-case: a name on the site is the site's name.
-  const named = { ...brief, facts: brief.facts.map((f) => (f.field === 'name' ? { ...f, onSite: true } : f)) }
+  const named = {
+    ...brief,
+    business: { ...brief.business, name: SERVICE_NAME },
+    facts: brief.facts.map((f) => (f.field === 'name' ? { ...f, onSite: true } : f))
+  }
   assert.equal(siteNameOf(named), SERVICE_NAME)
   assert.equal(siteBusinessOf(named), named.business)
 })

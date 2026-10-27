@@ -68,6 +68,15 @@ test('a held business name: the research brand the agent reads names nobody, and
   assert.equal(collected.logo, 'logo-1')
 })
 
+test("a held business name: the research bundle says so in the brief's own shape, {missing, reasons}", () => {
+  assert.deepEqual(checkedResearch(revisionWith(false)).nameHeld, {
+    missing: 'name',
+    reasons: ['name-differs-from-own-marks']
+  })
+  // Counter-case: a name on the site carries no nameHeld at all.
+  assert.equal('nameHeld' in checkedResearch(revisionWith(true)), false)
+})
+
 test('a business name on the site: the agent reads the brand as it was collected, and QA asks for the name', () => {
   const revision = revisionWith(true)
   const brand = bundlePart(checkedResearch(revision), 'brand').value

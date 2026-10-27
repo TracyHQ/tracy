@@ -1,14 +1,16 @@
 /**
  * "Name on the site" on the Details Profile card: the name the site carries, a chip while the sources disagree
  * (`Check this`) or once the person acted (`Checked`), what each source says, and Keep · Use the other name · Edit.
- * Nothing blocks the build: unchecked, it uses the suggested name.
+ * Nothing blocks the build: unchecked, it uses the suggested name. While the brief holds the name off the site, the row
+ * is "Business name" with a `Not on the site` chip, the neutral name the site goes by instead and why it is held.
  */
 import { type JSX, useId, useState } from 'react'
 import { Badge, Button, Input } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
-import type { NameRowView, NameSourceView } from './profile-name-model.ts'
+import type { HeldNameView, NameRowView, NameSourceView } from './profile-name-model.ts'
+import { REASON_CODES } from './profile-facts-model.ts'
 import type { Translate } from './strings.ts'
 
 /** Product names stay as they are written; the other sources are words of the interface. */
@@ -32,6 +34,13 @@ export function joined(list: string[]): string {
   } catch {
     return list.join(', ')
   }
+}
+
+/** Why a held name is off the site, in the words the fact rows use: the owner's choice, else the rule's reasons. */
+export function heldReasonKeys(held: HeldNameView): string[] {
+  if (held.decidedBy === 'owner') return ['name.held.owner']
+  const known = held.reasons.filter((r) => (REASON_CODES as readonly string[]).includes(r))
+  return known.length === 0 ? ['facts.reason.other'] : known.map((r) => `facts.reason.${r}`)
 }
 
 export function ProfileNameRow({
@@ -66,16 +75,35 @@ export function ProfileNameRow({
   }
   return (
     <div className="tracy-wo-field">
-      <dt className="tracy-wo-muted tracy-wo-small">{t('name.label')}</dt>
+      <dt className="tracy-wo-muted tracy-wo-small">{t(view.held ? 'name.label.held' : 'name.label')}</dt>
       <dd>
         <span className="tracy-wo-row tracy-wo-wrap">
           <span>{view.name}</span>
+          {view.held ? (
+            <Badge variant="outline" className="tracy-wo-name-chip is-held">
+              {t('name.chip.held')}
+            </Badge>
+          ) : null}
           {view.chip !== null ? (
             <Badge variant="outline" className={cn('tracy-wo-name-chip', `is-${view.chip}`)}>
               {t(view.chip === 'check' ? 'name.chip.check' : 'name.chip.checked')}
             </Badge>
           ) : null}
         </span>
+        {view.held ? (
+          <>
+            <span className="tracy-wo-muted tracy-wo-small" role="note">
+              {view.held.siteName !== null
+                ? t('name.held.uses', { name: view.held.siteName })
+                : t('name.held.none')}
+            </span>
+            {heldReasonKeys(view.held).map((key) => (
+              <span key={key} className="tracy-wo-muted tracy-wo-small">
+                {t(key)}
+              </span>
+            ))}
+          </>
+        ) : null}
         {open && view.lines.length > 1 ? (
           <span className="tracy-wo-muted tracy-wo-small">
             {view.lines

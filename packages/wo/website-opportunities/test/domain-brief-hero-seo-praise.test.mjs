@@ -172,8 +172,21 @@ test('praise themes from reviews become key message candidates on verbatim revie
   })
   assert.equal(crowded.keyMessages.length, 3)
   assert.ok(crowded.keyMessages.every((m) => m.basis !== 'praise'))
-  // In the brief it rests on the on-site service its quotes name, and says it is what customers praise.
-  const brief = hscBrief({ answer })
+  // Both its reviews name Alex, whom only reviews name: held reviews are quoted nowhere, so while Alex is held the
+  // brief carries no such message.
+  const held = hscBrief({ answer })
+  assert.equal(
+    held.keyMessages?.find((x) => x.label === 'Wonderful with children'),
+    undefined
+  )
+  assert.doesNotMatch(renderBriefMarkdown(held), /Wonderful with children/)
+  // Once the owner shows Alex, the reviews are usable: in the brief it rests on the on-site service its quotes name,
+  // and says it is what customers praise.
+  const alex = held.facts.find((f) => f.field === 'team')
+  const brief = hscBrief({
+    answer,
+    overrides: { [alex.id]: { onSite: true, at: '2026-10-27T09:00:00.000Z' } }
+  })
   assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })
   const m = brief.keyMessages.find((x) => x.label === 'Wonderful with children')
   assert.equal(m.basis, 'praise')
@@ -243,7 +256,7 @@ test('the markdown tells the build a held name is not to be written', () => {
   const nameFact = on.facts.find((f) => f.field === 'name')
   assert.match(
     renderBriefMarkdown(hscBrief({ overrides: { [nameFact.id]: OFF } })),
-    /- Name: .*held off the site/
+    /- Name: withheld until the owner confirms it .*writes no business name/
   )
-  assert.doesNotMatch(renderBriefMarkdown(on), /- Name: .*held off the site/)
+  assert.doesNotMatch(renderBriefMarkdown(on), /- Name: withheld/)
 })
