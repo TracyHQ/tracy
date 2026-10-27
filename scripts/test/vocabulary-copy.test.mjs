@@ -226,6 +226,8 @@ describe(`the vocabulary gates and "${BANNED}"`, () => {
       'check-language.ts',
       'lib/coined-words.mjs',
       'lib/comment-language.ts',
+      // `check-language.ts` imports the list of Tracy-owned vendor trees.
+      'lib/owned-vendor-trees.ts',
       // `check-language.ts` reads the export's exclude rules to skip ledger rows for left-out files.
       'opensource/export.mjs'
     ]) {
