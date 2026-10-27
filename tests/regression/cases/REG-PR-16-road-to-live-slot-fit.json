@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-16-road-to-live-slot-fit",
+  "kind": "feat",
+  "title": "Road to live holds Publish for a new Joomla release whose content map lacks Slot fit, and only warns for a live one",
+  "area": "road-to-live/content-coverage",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test apps/tracy-web/test/content-coverage.test.mjs packages/web/tracy-harness/test/problem-guides.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A release not shown on Design inspiration whose content map has no Slot fit is todo coverage-fit with fitHolds true, and the publish refusal names Slot fit.",
+    "The same release shown on Design inspiration is warn coverage-live-fit.",
+    "A keep flag that disagrees with the measured kind is fitState invalid with its reason; slots without fit are counted and the first eight named.",
+    "The released JA Boxing 1.0.5 contract warns while live and holds otherwise.",
+    "The panel guide gives one prompt that measures Slot fit with the content coverage audit (--write --fit)."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/lib/content-coverage/fit.js fitOfContentMap, fitOfRelease; apps/tracy-web/src/lib/content-coverage/judge.js judgeFit; apps/tracy-web/src/lib/content-coverage/road-step.js contentCoverageStep, contentCoverageRefusal; packages/web/tracy-harness/src/cms/problem-guides.ts guideOf",
+    "test": "apps/tracy-web/test/content-coverage.test.mjs; packages/web/tracy-harness/test/problem-guides.test.mjs"
+  },
+  "evidence": "Every released content map predates Slot fit, and nothing on the Road to live held a new release whose map did not say the shape of its slots.",
+  "fence": "contentCoverageStep judges the Slot fit group with judgeFit after holes and roles: todo coverage-fit for a release not shown, warn coverage-live-fit for a live one; contentCoverageRefusal names Slot fit.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/content-coverage.test.mjs",
+      "packages/web/tracy-harness/test/problem-guides.test.mjs"
+    ],
+    "tests": [
+      "fit group: a content map without Slot fit holds a release not shown, naming Slot fit and the first keys",
+      "fit group: the same release shown on Design inspiration only warns",
+      "fit group: a keep flag that disagrees with the measured kind is invalid, with its reason",
+      "fit group: the released JA Boxing 1.0.5 contract has no Slot fit, so it warns while live and holds otherwise",
+      "Slot fit group of Content coverage: guides, lists and ONE prompt that measures Slot fit with the audit"
+    ]
+  },
+  "pr": 16
+}
