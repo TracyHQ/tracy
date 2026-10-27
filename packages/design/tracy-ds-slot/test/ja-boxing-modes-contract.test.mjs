@@ -116,3 +116,9 @@ test('BAND-1: the two kept photo-card scopes say why they stay whole', () => {
   for (const scope of ['.features-item .title', '.features-item .media-lead'])
     assert.match(modes.keepWhole[scope], /photograph/)
 })
+
+test('EMPTY-1 / BORDER-1: the decorative grid lines and the link underline read border roles, not the text colour', () => {
+  assert.match(blockOf('.vertical-lines .container-inner'), /border-color:var\(--ds-c-border-soft/)
+  assert.match(blockOf('.vertical-lines .col:not(:first-child)'), /border-color:var\(--ds-c-border-soft/)
+  assert.match(blockOf('.link-underline'), /border-bottom-color:var\(--ds-c-border\b/)
+})

@@ -166,6 +166,15 @@
       "border-color": "border",
       "color": "fg"
     },
+    ".link-underline": {
+      "border-bottom-color": "border"
+    },
+    ".vertical-lines .container-inner": {
+      "border-color": "border-soft"
+    },
+    ".vertical-lines .col:not(:first-child)": {
+      "border-color": "border-soft"
+    },
     ".btn.btn-link, .btn.btn-outline-info": {
       "color": "accent-text"
     },
