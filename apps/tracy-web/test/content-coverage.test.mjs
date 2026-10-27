@@ -6,7 +6,7 @@
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -650,4 +650,19 @@ test('fit group: the released JA Boxing 1.0.5 contract has no Slot fit, so it wa
   const hidden = stepOf(roadOf(at({}), { contracts }))
   assert.equal(hidden.state, 'todo')
   assert.deepEqual([hidden.params.fitState, hidden.params.fitHolds], ['none', true])
+})
+
+test('fit group: the released JA Boxing 1.0.7 contract carries a complete Slot fit, so nothing holds and the hero boxer asks for a cut-out', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.7' }, ...over })
+  const hidden = stepOf(roadOf(at({}), { contracts }))
+  assert.equal(hidden.params.fitState, 'ready')
+  assert.equal(hidden.params.fitHolds, false)
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-boxing/j6/1.0.7/content-map.json'), 'utf8'))
+  assert.equal(map.slotFitVersion, 'slot-fit/1')
+  const hero = map.slots.find((slot) => slot.key === 'module-156.1')
+  assert.ok(hero, 'the hero boxer slot is in the map')
+  assert.equal(hero.fit.kind, 'cutout')
+  assert.equal(hero.fit.transparent, true)
 })
